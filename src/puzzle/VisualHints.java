@@ -16,6 +16,7 @@ import static puzzle.Parameters.BTN_SIZE;
 public class VisualHints {
 
     private ArrayList<Image> horizontalList = new ArrayList<>();
+    private ArrayList<Image> verticalList = new ArrayList<>();
 
     public VisualHints(ArrayList<Rule> rules) {
         int u = 1;
@@ -37,8 +38,10 @@ public class VisualHints {
                     scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
                     tmpImage.getGraphics().drawImage( scaled, (int)BTN_SIZE*2*2, 0, null);
                     horizontalList.add(tmpImage);
+                    //*
                     ImageIO.write(tmpImage, "png", new File(u+".png"));
                     u++;
+                    //*/
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -57,11 +60,37 @@ public class VisualHints {
                     scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
                     tmpImage.getGraphics().drawImage( scaled, (int)BTN_SIZE*2*2, 0, null);
                     horizontalList.add(tmpImage);
+                    //* for Debug
                     ImageIO.write(tmpImage, "png", new File(u+".png"));
                     u++;
+                    //*/
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } else if ( r.getClass().equals(rules.NearRule.class) ) {
+                NearRule t = (NearRule)r;
+                int leftImage = (t.thing1[0]+1)*10 + t.thing1[1];
+                int rightImage = (t.thing2[0]+1)*10 + t.thing2[1];
+                try {
+                    BufferedImage bi = ImageIO.read(new File("src/image/" + leftImage + ".png"));
+                    Image scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
+                    tmpImage.getGraphics().drawImage( scaled , 0, 0, null);
+                    bi = ImageIO.read(new File("src/image/near.png"));
+                    scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
+                    tmpImage.getGraphics().drawImage( scaled , (int)BTN_SIZE*2, 0, null);
+                    bi = ImageIO.read(new File("src/image/" + rightImage + ".png"));
+                    scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
+                    tmpImage.getGraphics().drawImage( scaled, (int)BTN_SIZE*2*2, 0, null);
+                    horizontalList.add(tmpImage);
+                    //* for Debug
+                    ImageIO.write(tmpImage, "png", new File(u+".png"));
+                    u++;
+                    //*/
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if ( r.getClass().equals(rules.UnderRule.class) ) {
+
             }
         }
 

@@ -11,7 +11,7 @@ import static puzzle.ShowOptions.SHOW_VERT;
 
 public class UnderRule extends Rule {
 
-    private int row1, thing1, row2, thing2;
+    public int row1, thing1, row2, thing2;
 
     public UnderRule(int[][] puzzle) {
         super();
