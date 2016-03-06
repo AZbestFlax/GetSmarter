@@ -8,10 +8,6 @@ import javax.sql.rowset.serial.SerialArray;
 import java.io.Serializable;
 import java.util.Random;
 
-/**
- * Created by AZbest on 22.02.2016.
- */
-
 public abstract class Rule implements Serializable {
 
     @Override

@@ -15,6 +15,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import puzzle.Puzzle;
+import puzzle.VisualHints;
 
 import static puzzle.Parameters.PUZZLE_SIZE;
 import static puzzle.Parameters.BTN_SIZE;
@@ -26,11 +27,13 @@ public class MainForm extends Application {
     GridPane field;
     private boolean[][] openButtons;
     Glyph glyph;
+    VisualHints vhh;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         puzzle = new Puzzle();
         glyph = new Glyph();
+        vhh = new VisualHints(puzzle.getRules());
 
         openButtons = new boolean[PUZZLE_SIZE][PUZZLE_SIZE];
         for ( int i = 0; i < PUZZLE_SIZE; i++) {
@@ -107,13 +110,6 @@ public class MainForm extends Application {
 
         leftSide.setOpaqueInsets(new Insets(10.0));
         leftSide.getChildren().addAll(field, bottomSide);
-
-        for (int i = 0; i < PUZZLE_SIZE; i++) {
-            for (int j = 0; j < PUZZLE_SIZE; j++) {
-                if (puzzle.possibilities.isDefined(i, j)) {
-                }
-            }
-        }
 
         for (int i = 0; i < PUZZLE_SIZE; i++)
             updateButton(i);

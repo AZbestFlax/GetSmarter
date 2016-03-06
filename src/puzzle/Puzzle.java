@@ -9,7 +9,7 @@ import java.util.List;
 import static puzzle.Parameters.PUZZLE_SIZE;
 
 public class Puzzle {
-    private List<Rule> rules;
+    private ArrayList<Rule> rules;
     private int[][] puzzle;
     private boolean[] visibleRules;
     public Possibilities possibilities;
@@ -28,6 +28,10 @@ public class Puzzle {
         }
         PuzzleGenerator.printRules(rules);
         PuzzleGenerator.printPuzzle(puzzle);
+    }
+
+    public ArrayList<Rule> getRules() {
+        return rules;
     }
 
     public static void main(String[] args) {

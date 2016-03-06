@@ -10,9 +10,9 @@ import static puzzle.Parameters.PUZZLE_SIZE;
 import static puzzle.ShowOptions.SHOW_HORIZ;
 
 public class BetweenRule extends Rule {
-    private int row1, thing1;
-    private int row2, thing2;
-    private int centerRow, centerThing;
+    public int row1, thing1;
+    public int row2, thing2;
+    public int centerRow, centerThing;
 
     public BetweenRule(int[][] puzzle) {
         super();

@@ -10,7 +10,7 @@ import static puzzle.Parameters.PUZZLE_SIZE;
 import static puzzle.ShowOptions.SHOW_HORIZ;
 
 public class DirectionRule extends Rule {
-    private int row1, thing1, row2, thing2;
+    public int row1, thing1, row2, thing2;
 
     public DirectionRule(int[][] puzzle) {
         super();
