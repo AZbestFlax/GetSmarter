@@ -21,8 +21,9 @@ public class VisualHints {
     public VisualHints(ArrayList<Rule> rules) {
         int u = 1;
         for (Rule r: rules) {
-            BufferedImage tmpImage = new BufferedImage((int)BTN_SIZE*2*3, (int)BTN_SIZE*2, TYPE_INT_ARGB);
+            BufferedImage tmpImage;
             if ( r.getClass().equals(rules.BetweenRule.class) ) {
+                tmpImage = new BufferedImage((int)BTN_SIZE*2*3, (int)BTN_SIZE*2, TYPE_INT_ARGB);
                 BetweenRule t = (BetweenRule)r;
                 int leftImage = (t.row1+1)*10 + t.thing1;
                 int centerImage = (t.centerRow+1)*10 + t.centerThing;
@@ -46,6 +47,7 @@ public class VisualHints {
                     e.printStackTrace();
                 }
             } else if ( r.getClass().equals(rules.DirectionRule.class) ) {
+                tmpImage = new BufferedImage((int)BTN_SIZE*2*3, (int)BTN_SIZE*2, TYPE_INT_ARGB);
                 DirectionRule t = (DirectionRule)r;
                 int leftImage = (t.row1+1)*10 + t.thing1;
                 int rightImage = (t.row2+1)*10 + t.thing2;
@@ -68,6 +70,7 @@ public class VisualHints {
                     e.printStackTrace();
                 }
             } else if ( r.getClass().equals(rules.NearRule.class) ) {
+                tmpImage = new BufferedImage((int)BTN_SIZE*2*3, (int)BTN_SIZE*2, TYPE_INT_ARGB);
                 NearRule t = (NearRule)r;
                 int leftImage = (t.thing1[0]+1)*10 + t.thing1[1];
                 int rightImage = (t.thing2[0]+1)*10 + t.thing2[1];
@@ -90,7 +93,26 @@ public class VisualHints {
                     e.printStackTrace();
                 }
             } else if ( r.getClass().equals(rules.UnderRule.class) ) {
+                tmpImage = new BufferedImage((int)BTN_SIZE*2, (int)BTN_SIZE*2*2, TYPE_INT_ARGB);
+                UnderRule t = (UnderRule)r;
+                int leftImage = (t.row1+1)*10 + t.thing1;
+                int rightImage = (t.row2+1)*10 + t.thing2;
+                try {
+                    BufferedImage bi = ImageIO.read(new File("src/image/" + leftImage + ".png"));
+                    Image scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
+                    tmpImage.getGraphics().drawImage( scaled , 0, 0, null);
 
+                    bi = ImageIO.read(new File("src/image/" + rightImage + ".png"));
+                    scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
+                    tmpImage.getGraphics().drawImage( scaled, 0, (int)BTN_SIZE*2, null);
+                    verticalList.add(tmpImage);
+                    //* for Debug
+                    ImageIO.write(tmpImage, "png", new File(u+".png"));
+                    u++;
+                    //*/
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
