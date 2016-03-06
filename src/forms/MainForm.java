@@ -85,9 +85,9 @@ public class MainForm extends Application {
         for ( int i = 0; i < PUZZLE_SIZE; ++i ) {
             for ( int j = 0; j < PUZZLE_SIZE; ++j ) {
                 flow[i][j] = new FlowPane();
-                flow[i][j].setPrefWrapLength( Math.ceil(Math.sqrt(PUZZLE_SIZE))*BTN_SIZE + 10.0);
-                flow[i][j].setPrefWidth( Math.ceil(Math.sqrt(PUZZLE_SIZE))*BTN_SIZE + 10.0 );
-                flow[i][j].setPrefHeight( Math.ceil(Math.sqrt(PUZZLE_SIZE))*BTN_SIZE + 10.0 );
+                flow[i][j].setPrefWrapLength( Math.ceil(Math.sqrt(PUZZLE_SIZE)+1)*BTN_SIZE + 10.0);
+                flow[i][j].setPrefWidth( Math.ceil(Math.sqrt(PUZZLE_SIZE)+1)*BTN_SIZE + 10.0 );
+                flow[i][j].setPrefHeight( Math.ceil(Math.sqrt(PUZZLE_SIZE)+1)*BTN_SIZE + 10.0 );
                 flow[i][j].setAlignment(Pos.CENTER);
                 flow[i][j].setId("" + (i*10 + j));
                 field.add(flow[i][j], j, i);
