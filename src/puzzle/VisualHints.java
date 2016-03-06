@@ -1,5 +1,7 @@
 package puzzle;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.ImageView;
 import rules.BetweenRule;
 import rules.*;
 
@@ -15,8 +17,8 @@ import static puzzle.Parameters.BTN_SIZE;
 
 public class VisualHints {
 
-    private ArrayList<Image> horizontalList = new ArrayList<>();
-    private ArrayList<Image> verticalList = new ArrayList<>();
+    public ArrayList<ImageView> horizontalList = new ArrayList<>();
+    public ArrayList<ImageView> verticalList = new ArrayList<>();
 
     public VisualHints(ArrayList<Rule> rules) {
         int u = 1;
@@ -38,8 +40,10 @@ public class VisualHints {
                     bi = ImageIO.read(new File("src/image/" + rightImage + ".png"));
                     scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
                     tmpImage.getGraphics().drawImage( scaled, (int)BTN_SIZE*2*2, 0, null);
-                    horizontalList.add(tmpImage);
-                    //*
+                    ImageView iv = new ImageView();
+                    iv.setImage(SwingFXUtils.toFXImage(tmpImage, null));
+                    horizontalList.add(iv);
+                    /*
                     ImageIO.write(tmpImage, "png", new File(u+".png"));
                     u++;
                     //*/
@@ -61,8 +65,10 @@ public class VisualHints {
                     bi = ImageIO.read(new File("src/image/" + rightImage + ".png"));
                     scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
                     tmpImage.getGraphics().drawImage( scaled, (int)BTN_SIZE*2*2, 0, null);
-                    horizontalList.add(tmpImage);
-                    //* for Debug
+                    ImageView iv = new ImageView();
+                    iv.setImage(SwingFXUtils.toFXImage(tmpImage, null));
+                    horizontalList.add(iv);
+                    /* for Debug
                     ImageIO.write(tmpImage, "png", new File(u+".png"));
                     u++;
                     //*/
@@ -84,8 +90,10 @@ public class VisualHints {
                     bi = ImageIO.read(new File("src/image/" + rightImage + ".png"));
                     scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
                     tmpImage.getGraphics().drawImage( scaled, (int)BTN_SIZE*2*2, 0, null);
-                    horizontalList.add(tmpImage);
-                    //* for Debug
+                    ImageView iv = new ImageView();
+                    iv.setImage(SwingFXUtils.toFXImage(tmpImage, null));
+                    horizontalList.add(iv);
+                    /* for Debug
                     ImageIO.write(tmpImage, "png", new File(u+".png"));
                     u++;
                     //*/
@@ -105,8 +113,10 @@ public class VisualHints {
                     bi = ImageIO.read(new File("src/image/" + rightImage + ".png"));
                     scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
                     tmpImage.getGraphics().drawImage( scaled, 0, (int)BTN_SIZE*2, null);
-                    verticalList.add(tmpImage);
-                    //* for Debug
+                    ImageView iv = new ImageView();
+                    iv.setImage(SwingFXUtils.toFXImage(tmpImage, null));
+                    verticalList.add(iv);
+                    /* for Debug
                     ImageIO.write(tmpImage, "png", new File(u+".png"));
                     u++;
                     //*/

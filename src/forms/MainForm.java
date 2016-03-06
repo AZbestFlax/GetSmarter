@@ -2,9 +2,7 @@ package forms;
 
 import image.Glyph;
 import javafx.application.Application;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,6 +14,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import puzzle.Puzzle;
 import puzzle.VisualHints;
+
+import java.awt.*;
 
 import static puzzle.Parameters.PUZZLE_SIZE;
 import static puzzle.Parameters.BTN_SIZE;
@@ -55,6 +55,20 @@ public class MainForm extends Application {
         horizontalHints.setVgap(8);
         horizontalHints.setPrefWrapLength(140.0);
         horizontalHints.setHgap(4);
+
+        if ( !vhh.horizontalList.isEmpty() ) {
+            Button[] horizontalButton = new Button[vhh.horizontalList.size()];
+            int i = 0;
+            for (ImageView img : vhh.horizontalList) {
+                horizontalButton[i] = new Button("", img);
+                horizontalButton[i].setOnMouseClicked( (ae) -> {
+                    ((Button)(ae).getSource()).setOpacity(0.2);
+                    ((Button)(ae).getSource()).setDisable(true);
+                } );
+                horizontalHints.getChildren().add(horizontalButton[i++]);
+            }
+        }
+
         rightSide.setContent(horizontalHints);
 
         field = new GridPane();
@@ -63,6 +77,8 @@ public class MainForm extends Application {
             field.addColumn(i);
             field.addRow(i);
         }
+        field.setPrefWidth( (Math.ceil(Math.sqrt(PUZZLE_SIZE))*BTN_SIZE + 10.0)*PUZZLE_SIZE );
+
         FlowPane[][] flow = new FlowPane[PUZZLE_SIZE][PUZZLE_SIZE];
 
         tb = new Button[PUZZLE_SIZE][PUZZLE_SIZE][PUZZLE_SIZE];
@@ -104,18 +120,33 @@ public class MainForm extends Application {
 
         ScrollPane bottomSide = new ScrollPane();
         FlowPane verticalHints = new FlowPane();
+
+        if ( !vhh.verticalList.isEmpty() ) {
+            Button[] veerticalButton = new Button[vhh.verticalList.size()];
+            int i = 0;
+            for (ImageView img : vhh.verticalList) {
+                veerticalButton[i] = new Button("", img);
+                veerticalButton[i].setOnMouseClicked( (ae) -> {
+                ((Button)(ae).getSource()).setOpacity(0.2);
+                ((Button)(ae).getSource()).setDisable(true);
+                } );
+                verticalHints.getChildren().add(veerticalButton[i++]);
+            }
+        }
+
         bottomSide.setContent(verticalHints);
         bottomSide.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         bottomSide.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         leftSide.setOpaqueInsets(new Insets(10.0));
+        leftSide.setPrefWidth( (Math.ceil(Math.sqrt(PUZZLE_SIZE))*BTN_SIZE + 10.0)*PUZZLE_SIZE );
         leftSide.getChildren().addAll(field, bottomSide);
 
         for (int i = 0; i < PUZZLE_SIZE; i++)
             updateButton(i);
 
         primaryStage.setTitle("GS");
-        primaryStage.setScene(new Scene(root, 700, 400));
+        primaryStage.setScene(new Scene(root, 800, 400));
         primaryStage.show();
     }
 
