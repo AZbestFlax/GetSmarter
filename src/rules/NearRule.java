@@ -11,8 +11,8 @@ import static puzzle.ShowOptions.*;
 
 public class NearRule extends Rule {
 
-    private int thing1[];
-    private int thing2[];
+    public int thing1[];
+    public int thing2[];
 
 
     public NearRule(int[][] puzzle) {

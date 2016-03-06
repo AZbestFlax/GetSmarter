@@ -43,7 +43,25 @@ public class VisualHints {
                     e.printStackTrace();
                 }
             } else if ( r.getClass().equals(rules.DirectionRule.class) ) {
-
+                DirectionRule t = (DirectionRule)r;
+                int leftImage = (t.row1+1)*10 + t.thing1;
+                int rightImage = (t.row2+1)*10 + t.thing2;
+                try {
+                    BufferedImage bi = ImageIO.read(new File("src/image/" + leftImage + ".png"));
+                    Image scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
+                    tmpImage.getGraphics().drawImage( scaled , 0, 0, null);
+                    bi = ImageIO.read(new File("src/image/left.png"));
+                    scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
+                    tmpImage.getGraphics().drawImage( scaled , (int)BTN_SIZE*2, 0, null);
+                    bi = ImageIO.read(new File("src/image/" + rightImage + ".png"));
+                    scaled = bi.getScaledInstance((int)BTN_SIZE*2, (int)BTN_SIZE*2, Image.SCALE_DEFAULT);
+                    tmpImage.getGraphics().drawImage( scaled, (int)BTN_SIZE*2*2, 0, null);
+                    horizontalList.add(tmpImage);
+                    ImageIO.write(tmpImage, "png", new File(u+".png"));
+                    u++;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
