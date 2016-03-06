@@ -1,5 +1,6 @@
 package forms;
 
+import image.Glyph;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -7,7 +8,9 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -22,10 +25,12 @@ public class MainForm extends Application {
     Button[][][] tb;
     GridPane field;
     private boolean[][] openButtons;
+    Glyph glyph;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         puzzle = new Puzzle();
+        glyph = new Glyph();
 
         openButtons = new boolean[PUZZLE_SIZE][PUZZLE_SIZE];
         for ( int i = 0; i < PUZZLE_SIZE; i++) {
@@ -69,7 +74,8 @@ public class MainForm extends Application {
                 field.add(flow[i][j], j, i);
 
                 for ( int k = 0; k < PUZZLE_SIZE; ++k ) {
-                    tb[i][j][k] = new Button("" + (k + 1));
+                    tb[i][j][k] = new Button("" + (k + 1), glyph.getGlyph(i, j, k));
+                    tb[i][j][k].setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
                     tb[i][j][k].setPrefSize(BTN_SIZE, BTN_SIZE);
                     tb[i][j][k].setId("" + (i*100 + j*10 + k));
 
@@ -135,9 +141,12 @@ public class MainForm extends Application {
         if ( !openButtons[i][j] ) {
             Button tmp = tb[i][j][k];
             field.getChildren().remove(tmp.getParent());
-            tmp.setPrefWidth(Math.ceil(Math.sqrt(PUZZLE_SIZE)) * BTN_SIZE + 10.0);
-            tmp.setPrefHeight(Math.ceil(Math.sqrt(PUZZLE_SIZE)) * BTN_SIZE + 10.0);
+            double newSize = Math.ceil(Math.sqrt(PUZZLE_SIZE)) * BTN_SIZE + 10.0;
+            tmp.setPrefWidth(newSize);
+            tmp.setPrefHeight(newSize);
             tmp.setOnMouseClicked(null);
+            glyph.getGlyph(i, j ,k).setFitHeight(newSize);
+            glyph.getGlyph(i, j ,k).setFitWidth(newSize);
             field.add(tmp, j, i);
             openButtons[i][j] = true;
         }
