@@ -1,46 +1,41 @@
 package forms;
 
-import image.Glyph;
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import puzzle.Puzzle;
 import puzzle.VisualHints;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
-import static puzzle.Parameters.PUZZLE_SIZE;
+import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 import static puzzle.Parameters.BTN_SIZE;
+import static puzzle.Parameters.GRID_SIZE;
+import static puzzle.Parameters.PUZZLE_SIZE;
 
 public class MainForm extends Application {
 
     Puzzle puzzle;
-    Button[][][] tb;
-    GridPane field;
     private boolean[][] openButtons;
-    Glyph glyph;
+    BufferedGlyph glyph;
     VisualHints vhh;
+    ImageView field;
+    BufferedImage backgroundField;
+    Coordinator coordinator;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        puzzle = new Puzzle();
-        glyph = new Glyph();
-        vhh = new VisualHints(puzzle.getRules());
-
-        openButtons = new boolean[PUZZLE_SIZE][PUZZLE_SIZE];
-        for ( int i = 0; i < PUZZLE_SIZE; i++) {
-            for ( int j = 0; j < PUZZLE_SIZE; j++) {
-                openButtons[i][j] = false;
-            }
-        }
+        reset();
 
         BorderPane root = new BorderPane();
         VBox leftSide = new VBox();
@@ -71,52 +66,9 @@ public class MainForm extends Application {
 
         rightSide.setContent(horizontalHints);
 
-        field = new GridPane();
+        field = new ImageView();
+        field.setImage(SwingFXUtils.toFXImage(backgroundField, null));
 
-        for (int i=0; i<PUZZLE_SIZE; i++) {
-            field.addColumn(i);
-            field.addRow(i);
-        }
-        field.setPrefWidth( (Math.ceil(Math.sqrt(PUZZLE_SIZE))*BTN_SIZE + 10.0)*PUZZLE_SIZE );
-
-        FlowPane[][] flow = new FlowPane[PUZZLE_SIZE][PUZZLE_SIZE];
-
-        tb = new Button[PUZZLE_SIZE][PUZZLE_SIZE][PUZZLE_SIZE];
-        for ( int i = 0; i < PUZZLE_SIZE; ++i ) {
-            for ( int j = 0; j < PUZZLE_SIZE; ++j ) {
-                flow[i][j] = new FlowPane();
-                flow[i][j].setPrefWrapLength( Math.ceil(Math.sqrt(PUZZLE_SIZE)+1)*BTN_SIZE + 10.0);
-                flow[i][j].setPrefWidth( Math.ceil(Math.sqrt(PUZZLE_SIZE)+1)*BTN_SIZE + 10.0 );
-                flow[i][j].setPrefHeight( Math.ceil(Math.sqrt(PUZZLE_SIZE)+1)*BTN_SIZE + 10.0 );
-                flow[i][j].setAlignment(Pos.CENTER);
-                flow[i][j].setId("" + (i*10 + j));
-                field.add(flow[i][j], j, i);
-
-                for ( int k = 0; k < PUZZLE_SIZE; ++k ) {
-                    tb[i][j][k] = new Button("" + (k + 1), glyph.getGlyph(i,  k));
-                    tb[i][j][k].setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                    tb[i][j][k].setPrefSize(BTN_SIZE, BTN_SIZE);
-                    tb[i][j][k].setId("" + (i*100 + j*10 + k));
-
-                    final int finalJ = j;
-                    final int finalI = i;
-                    final int finalK = k;
-                    tb[i][j][k].setOnMouseClicked( (ae) -> {
-                        if ( ae.getButton() == MouseButton.SECONDARY ) {
-                            puzzle.possibilities.exclude(finalJ, finalI, finalK+1);
-                        } else {
-                            puzzle.possibilities.set(finalJ, finalI, finalK+1);
-                        }
-                        updateButton(finalI);
-                    } );
-
-                    flow[i][j].getChildren().add(tb[i][j][k]);
-                }
-
-            }
-        }
-
-        field.setGridLinesVisible(true);
 
         ScrollPane bottomSide = new ScrollPane();
         FlowPane verticalHints = new FlowPane();
@@ -164,25 +116,42 @@ public class MainForm extends Application {
         }
     }
 
+    public void reset() {
+        puzzle = new Puzzle();
+        glyph = new BufferedGlyph();
+        vhh = new VisualHints(puzzle.getRules());
+        coordinator = new Coordinator(PUZZLE_SIZE);
+
+        openButtons = new boolean[PUZZLE_SIZE][PUZZLE_SIZE];
+        for ( int i = 0; i < PUZZLE_SIZE; i++) {
+            for ( int j = 0; j < PUZZLE_SIZE; j++) {
+                openButtons[i][j] = false;
+            }
+        }
+
+        int buttonSize = (int) Coordinator.getButtonSize();
+        field = new ImageView();
+        backgroundField = new BufferedImage((int)GRID_SIZE, (int)GRID_SIZE, TYPE_INT_ARGB);
+        Graphics graph = backgroundField.getGraphics();
+        for (int i = 0; i < PUZZLE_SIZE; i++) {
+            for ( int j = 0; j < PUZZLE_SIZE; j++ ) {
+                for ( int k = 0; k < PUZZLE_SIZE; k++ ) {
+                    Position pos = coordinator.getPosition(i, j, k);
+                    graph.drawImage(
+                            glyph.getGlyph(i, k).getScaledInstance(buttonSize, buttonSize, Image.SCALE_DEFAULT)
+                    , (int)pos.x, (int)pos.y, null);
+                }
+            }
+        }
+    }
+
     private void setButtonActive(int i, int j, int k) {
         if ( !openButtons[i][j] ) {
-            Button tmp = tb[i][j][k];
-            field.getChildren().remove(tmp.getParent());
-            double newSize = Math.ceil(Math.sqrt(PUZZLE_SIZE)) * BTN_SIZE + 10.0;
-            tmp.setPrefWidth(newSize);
-            tmp.setPrefHeight(newSize);
-            tmp.setOnMouseClicked(null);
-            glyph.getGlyph(i, k).setFitHeight(newSize);
-            glyph.getGlyph(i, k).setFitWidth(newSize);
-            field.add(tmp, j, i);
             openButtons[i][j] = true;
         }
     }
 
     private void setButtonInactive(int i, int j, int k) {
-        Button tmp = tb[i][j][k];
-        tmp.setOpacity(0.2);
-        tmp.setDisable(true);
     }
 
     public static void main(String[] args) {

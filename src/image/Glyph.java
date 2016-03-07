@@ -5,6 +5,7 @@ import javafx.scene.image.ImageView;
 import static puzzle.Parameters.BTN_SIZE;
 import static puzzle.Parameters.PUZZLE_SIZE;
 
+@Deprecated
 public class Glyph {
 
     //private ImageView[][][] images;
