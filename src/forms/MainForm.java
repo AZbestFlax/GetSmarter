@@ -93,7 +93,7 @@ public class MainForm extends Application {
                 field.add(flow[i][j], j, i);
 
                 for ( int k = 0; k < PUZZLE_SIZE; ++k ) {
-                    tb[i][j][k] = new Button("" + (k + 1), glyph.getGlyph(i, j, k));
+                    tb[i][j][k] = new Button("" + (k + 1), glyph.getGlyph(i,  k));
                     tb[i][j][k].setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
                     tb[i][j][k].setPrefSize(BTN_SIZE, BTN_SIZE);
                     tb[i][j][k].setId("" + (i*100 + j*10 + k));
@@ -172,8 +172,8 @@ public class MainForm extends Application {
             tmp.setPrefWidth(newSize);
             tmp.setPrefHeight(newSize);
             tmp.setOnMouseClicked(null);
-            glyph.getGlyph(i, j ,k).setFitHeight(newSize);
-            glyph.getGlyph(i, j ,k).setFitWidth(newSize);
+            glyph.getGlyph(i, k).setFitHeight(newSize);
+            glyph.getGlyph(i, k).setFitWidth(newSize);
             field.add(tmp, j, i);
             openButtons[i][j] = true;
         }
