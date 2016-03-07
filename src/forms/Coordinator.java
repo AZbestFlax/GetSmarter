@@ -5,7 +5,7 @@ import static puzzle.Parameters.GRID_SIZE;
 public class Coordinator {
 
     static double GENERAL_TOP_INDENT = 0.0D;
-    static double GENERAL_LEFT_INDENT = 0.0D;
+    static double GENERAL_LEFT_INDENT = 5.0D;
     @Deprecated static int inLastRow;
     static int inRow;
     static int rowCount;

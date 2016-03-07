@@ -7,12 +7,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import puzzle.Puzzle;
 import puzzle.VisualHints;
@@ -21,9 +22,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
-import static puzzle.Parameters.BTN_SIZE;
-import static puzzle.Parameters.GRID_SIZE;
-import static puzzle.Parameters.PUZZLE_SIZE;
+import static puzzle.Parameters.*;
 
 public class MainForm extends Application {
 
@@ -35,10 +34,18 @@ public class MainForm extends Application {
     ImageView field;
     BufferedImage backgroundField;
     Coordinator coordinator;
-    Label info;
+    final Stage dialog = new Stage();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+        VBox dialogVbox = new VBox(20);
+        dialogVbox.getChildren().add(new Text("Wrong"));
+        Scene dialogScene = new Scene(dialogVbox, 300, 200);
+        dialog.setScene(dialogScene);
+
         reset();
 
         BorderPane root = new BorderPane();
@@ -52,7 +59,8 @@ public class MainForm extends Application {
         FlowPane horizontalHints = new FlowPane();
         horizontalHints.setAlignment(Pos.TOP_CENTER);
         horizontalHints.setVgap(8);
-        horizontalHints.setPrefWrapLength(140.0);
+        horizontalHints.setPrefWrapLength(BTN_SIZE * 12 + 40);
+        horizontalHints.setPrefWidth(BTN_SIZE * 12 + 40);
         horizontalHints.setHgap(4);
 
         if ( !vhh.horizontalList.isEmpty() ) {
@@ -76,11 +84,16 @@ public class MainForm extends Application {
             if (c != null) {
                 if ( guessedButtons[c.row][c.but] ) return;
                 if ( (ae).getButton().equals(MouseButton.PRIMARY) ) {
-                    //setButtonActive(c.row, c.col, c.but);
+                    if ( c.but != puzzle.getRightValue(c.row, c.col) - 1 ) {
+                        dialog.show();
+                        return;
+                    }
                     puzzle.possibilities.set(c.col, c.row, c.but+1);
                 } else if ( (ae).getButton().equals(MouseButton.SECONDARY) ) {
-                    //info.setText("" + c.row + " " +  c.col + " " + c.but);
-                    //setButtonInactive(c.row, c.col, c.but);
+                    if ( c.but == puzzle.getRightValue(c.row, c.col) - 1 ) {
+                        dialog.show();
+                        return;
+                    }
                     puzzle.possibilities.exclude(c.col, c.row, c.but+1);
                 }
                 updateButton(c.row);
@@ -90,6 +103,8 @@ public class MainForm extends Application {
 
         ScrollPane bottomSide = new ScrollPane();
         FlowPane verticalHints = new FlowPane();
+        verticalHints.setPrefWrapLength(BTN_SIZE * 4 + 10);
+        verticalHints.setPrefHeight(BTN_SIZE * 4 + 10);
 
         if ( !vhh.verticalList.isEmpty() ) {
             Button[] verticalButton = new Button[vhh.verticalList.size()];
@@ -123,7 +138,10 @@ public class MainForm extends Application {
 
         field.setImage(SwingFXUtils.toFXImage(backgroundField, null));
         primaryStage.setTitle("GS");
-        primaryStage.setScene(new Scene(root, 800, 400));
+        root.setPrefHeight(GRID_SIZE + verticalHints.getPrefHeight());
+        primaryStage.setResizable(false);
+
+        primaryStage.setScene(new Scene(root, GRID_SIZE + horizontalHints.getPrefWidth(), GRID_SIZE + verticalHints.getPrefHeight()));
         primaryStage.show();
     }
 
@@ -144,7 +162,7 @@ public class MainForm extends Application {
 
         int buttonSize = (int) Coordinator.getButtonSize();
         field = new ImageView();
-        backgroundField = new BufferedImage((int)GRID_SIZE, (int)GRID_SIZE, TYPE_INT_ARGB);
+        backgroundField = new BufferedImage((int)GRID_SIZE + 5, (int)GRID_SIZE, TYPE_INT_ARGB);
         Graphics graph = backgroundField.getGraphics();
         for (int i = 0; i < PUZZLE_SIZE; i++) {
             for ( int j = 0; j < PUZZLE_SIZE; j++ ) {

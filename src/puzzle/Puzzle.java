@@ -4,7 +4,6 @@ import rules.OpenRule;
 import rules.Rule;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static puzzle.Parameters.PUZZLE_SIZE;
 
@@ -36,6 +35,10 @@ public class Puzzle {
 
     public static void main(String[] args) {
         new Puzzle();
+    }
+
+    public int getRightValue(int row, int col) {
+        return puzzle[row][col];
     }
 
 }
