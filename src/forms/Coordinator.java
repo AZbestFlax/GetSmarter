@@ -105,6 +105,24 @@ public class Coordinator {
         return new Coordinate(r, c, b);
     }
 
+    public Position getPosition(int row, int col, int but) {
+        double x = GENERAL_LEFT_INDENT, y = GENERAL_TOP_INDENT;
+        x += col * gridCellSize;
+        y += row * gridCellSize;
+
+        y += TOP_INDENT;
+        int r = 0;
+        while ( but >= inRow ) {
+            y += buttonSize;
+            but -= inRow;
+            r++;
+        }
+        x += but * buttonSize;
+        if ( r == rowCount - 1 ) x += LEFT_INDENT;
+
+        return new Position(x, y);
+    }
+
     public static double getGridCellSize() {
         return gridCellSize;
     }
@@ -112,4 +130,23 @@ public class Coordinator {
     public static double getButtonSize() {
         return buttonSize;
     }
+
+    /* Remove after debug
+    public static void main(String[] args) {
+        Coordinator coord = new Coordinator(4);
+        System.out.println(coord.getPosition(0, 0, 0));
+        System.out.println(coord.getPosition(0, 0, 1));
+        System.out.println(coord.getPosition(0, 0, 2));
+        System.out.println(coord.getPosition(0, 0, 3));
+        System.out.println(coord.getPosition(0, 1, 0));
+        System.out.println(coord.getPosition(0, 1, 1));
+        System.out.println(coord.getPosition(0, 1, 2));
+        System.out.println(coord.getPosition(0, 2, 0));
+        System.out.println(coord.getPosition(0, 2, 1));
+        System.out.println(coord.getPosition(0, 2, 2));
+        System.out.println(coord.getPosition(1, 0, 0));
+        System.out.println(coord.getPosition(1, 0, 1));
+        System.out.println(coord.getPosition(1, 0, 2));
+    }
+    //*/
 }
