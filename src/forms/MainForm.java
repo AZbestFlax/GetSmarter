@@ -7,7 +7,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -27,11 +29,13 @@ public class MainForm extends Application {
 
     Puzzle puzzle;
     private boolean[][] openButtons;
+    private boolean[][] guessedButtons;
     BufferedGlyph glyph;
     VisualHints vhh;
     ImageView field;
     BufferedImage backgroundField;
     Coordinator coordinator;
+    Label info;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -67,22 +71,36 @@ public class MainForm extends Application {
         rightSide.setContent(horizontalHints);
 
         field = new ImageView();
-        field.setImage(SwingFXUtils.toFXImage(backgroundField, null));
-
+        field.setOnMouseClicked( (ae) -> {
+            Coordinate c = coordinator.getCoordinate(ae.getX(), ae.getY());
+            if (c != null) {
+                if ( guessedButtons[c.row][c.but] ) return;
+                if ( (ae).getButton().equals(MouseButton.PRIMARY) ) {
+                    //setButtonActive(c.row, c.col, c.but);
+                    puzzle.possibilities.set(c.col, c.row, c.but+1);
+                } else if ( (ae).getButton().equals(MouseButton.SECONDARY) ) {
+                    //info.setText("" + c.row + " " +  c.col + " " + c.but);
+                    //setButtonInactive(c.row, c.col, c.but);
+                    puzzle.possibilities.exclude(c.col, c.row, c.but+1);
+                }
+                updateButton(c.row);
+                field.setImage(SwingFXUtils.toFXImage(backgroundField, null));
+            }
+        } );
 
         ScrollPane bottomSide = new ScrollPane();
         FlowPane verticalHints = new FlowPane();
 
         if ( !vhh.verticalList.isEmpty() ) {
-            Button[] veerticalButton = new Button[vhh.verticalList.size()];
+            Button[] verticalButton = new Button[vhh.verticalList.size()];
             int i = 0;
             for (ImageView img : vhh.verticalList) {
-                veerticalButton[i] = new Button("", img);
-                veerticalButton[i].setOnMouseClicked( (ae) -> {
+                verticalButton[i] = new Button("", img);
+                verticalButton[i].setOnMouseClicked( (ae) -> {
                 ((Button)(ae).getSource()).setOpacity(0.2);
                 ((Button)(ae).getSource()).setDisable(true);
                 } );
-                verticalHints.getChildren().add(veerticalButton[i++]);
+                verticalHints.getChildren().add(verticalButton[i++]);
             }
         }
 
@@ -94,26 +112,19 @@ public class MainForm extends Application {
         leftSide.setPrefWidth( (Math.ceil(Math.sqrt(PUZZLE_SIZE))*BTN_SIZE + 10.0)*PUZZLE_SIZE );
         leftSide.getChildren().addAll(field, bottomSide);
 
+        //*
         for (int i = 0; i < PUZZLE_SIZE; i++)
             updateButton(i);
+        //*/
+        /*
+        info = new Label();
+        root.setRight(info);
+*/
 
+        field.setImage(SwingFXUtils.toFXImage(backgroundField, null));
         primaryStage.setTitle("GS");
         primaryStage.setScene(new Scene(root, 800, 400));
         primaryStage.show();
-    }
-
-    private void updateButton(int i) {
-        for ( int j = 0; j < PUZZLE_SIZE; j++ ) {
-            if ( puzzle.possibilities.isDefined(j, i) ) {
-                setButtonActive(i, j, puzzle.possibilities.getDefined(j, i)-1);
-            } else {
-                for ( int k = 0; k < PUZZLE_SIZE; k++ ) {
-                    if ( !puzzle.possibilities.isAccessible(j, i, k) ) {
-                        setButtonInactive(i, j, k);
-                    }
-                }
-            }
-        }
     }
 
     public void reset() {
@@ -123,9 +134,11 @@ public class MainForm extends Application {
         coordinator = new Coordinator(PUZZLE_SIZE);
 
         openButtons = new boolean[PUZZLE_SIZE][PUZZLE_SIZE];
+        guessedButtons = new boolean[PUZZLE_SIZE][PUZZLE_SIZE];
         for ( int i = 0; i < PUZZLE_SIZE; i++) {
             for ( int j = 0; j < PUZZLE_SIZE; j++) {
                 openButtons[i][j] = false;
+                guessedButtons[i][j] = false;
             }
         }
 
@@ -145,13 +158,42 @@ public class MainForm extends Application {
         }
     }
 
+    private void updateButton(int i) {
+        for ( int j = 0; j < PUZZLE_SIZE; j++ ) {
+            if ( puzzle.possibilities.isDefined(j, i) ) {
+                setButtonActive(i, j, puzzle.possibilities.getDefined(j, i)-1);
+                guessedButtons[i][puzzle.possibilities.getDefined(j, i)-1] = true;
+            } else {
+                for ( int k = 0; k < PUZZLE_SIZE; k++ ) {
+                    if ( !puzzle.possibilities.isAccessible(j, i, k) ) {
+                        setButtonInactive(i, j, k);
+                    }
+                }
+            }
+        }
+    }
+
     private void setButtonActive(int i, int j, int k) {
         if ( !openButtons[i][j] ) {
+            Graphics graph = backgroundField.getGraphics();
+            Position pos = coordinator.getPosition(i, j, 0);
+            graph.drawImage(
+                    glyph.getGlyph(i, k).getScaledInstance(Coordinator.getGridCellSize(), Coordinator.getGridCellSize(), Image.SCALE_DEFAULT)
+                    , (int)pos.x, (int)pos.y - Coordinator.getTopIndent(), null);
             openButtons[i][j] = true;
         }
     }
 
     private void setButtonInactive(int i, int j, int k) {
+        if ( !openButtons[i][j] ) {
+            Graphics graph = backgroundField.getGraphics();
+            Position pos = coordinator.getPosition(i, j, k);
+
+            graph.setColor(graph.getColor());
+            graph.fillRect((int)pos.x, (int)pos.y, (int)Coordinator.getButtonSize(), (int)Coordinator.getButtonSize());
+
+//            graph.clearRect((int)pos.x, (int)pos.y, (int)Coordinator.getButtonSize(), (int)Coordinator.getButtonSize());
+        }
     }
 
     public static void main(String[] args) {

@@ -12,12 +12,12 @@ public class Coordinator {
     static double TOP_INDENT;
     static double LEFT_INDENT;
     int count;
-    static double gridCellSize;
+    static int gridCellSize;
     static double buttonSize;
 
     public Coordinator(int count) {
         this.count = count;
-        gridCellSize = GRID_SIZE / count;
+        gridCellSize = (int)GRID_SIZE / count;
         switch (count) {
             case 3: {
                 inRow = 2;
@@ -79,6 +79,10 @@ public class Coordinator {
         }
     }
 
+    public static int getTopIndent() {
+        return (int) TOP_INDENT;
+    }
+
     public Coordinate getCoordinate(double x, double y) {
         x -= (int)GENERAL_LEFT_INDENT;
         y -= (int)GENERAL_TOP_INDENT;
@@ -123,7 +127,7 @@ public class Coordinator {
         return new Position(x, y);
     }
 
-    public static double getGridCellSize() {
+    public static int getGridCellSize() {
         return gridCellSize;
     }
 
