@@ -42,6 +42,7 @@ public class MainForm extends Application {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(primaryStage);
         VBox dialogVbox = new VBox(20);
+        dialogVbox.setAlignment(Pos.CENTER);
         dialogVbox.getChildren().add(new Text("Wrong"));
         Scene dialogScene = new Scene(dialogVbox, 300, 200);
         dialog.setScene(dialogScene);
@@ -82,7 +83,7 @@ public class MainForm extends Application {
         field.setOnMouseClicked( (ae) -> {
             Coordinate c = coordinator.getCoordinate(ae.getX(), ae.getY());
             if (c != null) {
-                if ( guessedButtons[c.row][c.but] ) return;
+                if ( openButtons[c.row][c.col] || guessedButtons[c.row][c.but] ) return;
                 if ( (ae).getButton().equals(MouseButton.PRIMARY) ) {
                     if ( c.but != puzzle.getRightValue(c.row, c.col) - 1 ) {
                         dialog.show();
