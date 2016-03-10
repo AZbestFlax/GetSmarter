@@ -3,11 +3,12 @@ package puzzle;
 import rules.OpenRule;
 import rules.Rule;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static puzzle.Parameters.PUZZLE_SIZE;
 
-public class Puzzle {
+public class Puzzle implements Serializable {
     private ArrayList<Rule> rules;
     private int[][] puzzle;
     private boolean[] visibleRules;

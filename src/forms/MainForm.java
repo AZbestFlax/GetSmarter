@@ -3,9 +3,14 @@ package forms;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -47,6 +52,7 @@ public class MainForm extends Application {
         Scene dialogScene = new Scene(dialogVbox, 300, 200);
         dialog.setScene(dialogScene);
 
+        puzzle = new Puzzle();
         reset();
 
         BorderPane root = new BorderPane();
@@ -58,7 +64,7 @@ public class MainForm extends Application {
         root.setRight(rightSide);
 
         FlowPane horizontalHints = new FlowPane();
-        horizontalHints.setAlignment(Pos.TOP_CENTER);
+        horizontalHints.setAlignment(Pos.TOP_LEFT);
         horizontalHints.setVgap(8);
         horizontalHints.setPrefWrapLength(BTN_SIZE * 12 + 40);
         horizontalHints.setPrefWidth(BTN_SIZE * 12 + 40);
@@ -70,8 +76,10 @@ public class MainForm extends Application {
             for (ImageView img : vhh.horizontalList) {
                 horizontalButton[i] = new Button("", img);
                 horizontalButton[i].setOnMouseClicked( (ae) -> {
-                    ((Button)(ae).getSource()).setOpacity(0.2);
-                    ((Button)(ae).getSource()).setDisable(true);
+                    //((Button)(ae).getSource()).setOpacity(0.2);
+                    //((Button)(ae).getSource()).setDisable(true);
+                    //((Button)(ae).getSource()).setVisible(false);
+                    horizontalHints.getChildren().remove(ae.getSource());
                 } );
                 horizontalHints.getChildren().add(horizontalButton[i++]);
             }
@@ -106,6 +114,7 @@ public class MainForm extends Application {
         FlowPane verticalHints = new FlowPane();
         verticalHints.setPrefWrapLength(BTN_SIZE * 4 + 10);
         verticalHints.setPrefHeight(BTN_SIZE * 4 + 10);
+        verticalHints.setOrientation(Orientation.VERTICAL);
 
         if ( !vhh.verticalList.isEmpty() ) {
             Button[] verticalButton = new Button[vhh.verticalList.size()];
@@ -137,6 +146,18 @@ public class MainForm extends Application {
         root.setRight(info);
 */
 
+        MenuBar mainMenu = new MenuBar();
+        mainMenu.setPrefHeight(30);
+        Menu mGame = new Menu("Game");
+        MenuItem miOpen = new MenuItem("Open");
+        MenuItem miSave = new MenuItem("Save");
+        MenuItem miReset = new MenuItem("Reset");
+        MenuItem miExit = new MenuItem("Exit");
+        mGame.getItems().addAll(miOpen, miSave, miReset, new SeparatorMenuItem(), miExit);
+        mainMenu.getMenus().add(mGame);
+        root.setTop(mainMenu);
+
+
         field.setImage(SwingFXUtils.toFXImage(backgroundField, null));
         primaryStage.setTitle("GS");
         root.setPrefHeight(GRID_SIZE + verticalHints.getPrefHeight());
@@ -147,7 +168,6 @@ public class MainForm extends Application {
     }
 
     public void reset() {
-        puzzle = new Puzzle();
         glyph = new BufferedGlyph();
         vhh = new VisualHints(puzzle.getRules());
         coordinator = new Coordinator(PUZZLE_SIZE);
