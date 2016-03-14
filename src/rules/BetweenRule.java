@@ -6,7 +6,7 @@ import puzzle.ShowOptions;
 
 import java.util.Random;
 
-import static puzzle.Parameters.PUZZLE_SIZE;
+import static puzzle.Parameters.puzzleSize;
 import static puzzle.ShowOptions.SHOW_HORIZ;
 
 public class BetweenRule extends Rule {
@@ -17,11 +17,11 @@ public class BetweenRule extends Rule {
     public BetweenRule(int[][] puzzle) {
         super();
         Random rndGen = new Random();
-        centerRow = rndGen.nextInt(PUZZLE_SIZE);
-        row1 = rndGen.nextInt(PUZZLE_SIZE);
-        row2 = rndGen.nextInt(PUZZLE_SIZE);
+        centerRow = rndGen.nextInt(puzzleSize);
+        row1 = rndGen.nextInt(puzzleSize);
+        row2 = rndGen.nextInt(puzzleSize);
 
-        int centerCol = rndGen.nextInt(PUZZLE_SIZE - 2) + 1;
+        int centerCol = rndGen.nextInt(puzzleSize - 2) + 1;
         centerThing = puzzle[centerRow][centerCol];
         if (rndGen.nextInt(2) != 0) {
             thing1 = puzzle[row1][centerCol - 1];
@@ -44,14 +44,14 @@ public class BetweenRule extends Rule {
             changed = true;
             possibilities.exclude(0, centerRow, centerThing);
         }
-        if (possibilities.isPossible(PUZZLE_SIZE-1, centerRow, centerThing)) {
+        if (possibilities.isPossible(puzzleSize -1, centerRow, centerThing)) {
             changed = true;
-            possibilities.exclude(PUZZLE_SIZE-1, centerRow, centerThing);
+            possibilities.exclude(puzzleSize -1, centerRow, centerThing);
         }
         boolean goodLoop;
         do {
             goodLoop = false;
-            for (int i = 1; i < PUZZLE_SIZE-1; i++) {
+            for (int i = 1; i < puzzleSize -1; i++) {
                 if (possibilities.isPossible(i, centerRow, centerThing)) {
                     if (! ((possibilities.isPossible(i-1, row1, thing1) &&
                             possibilities.isPossible(i+1, row2, thing2)) ||
@@ -63,7 +63,7 @@ public class BetweenRule extends Rule {
                     }
                 }
             }
-            for (int i = 0; i < PUZZLE_SIZE; i++) {
+            for (int i = 0; i < puzzleSize; i++) {
                 boolean leftPossible, rightPossible;
                 if (possibilities.isPossible(i, row2, thing2)) {
                     if (i < 2)
@@ -71,7 +71,7 @@ public class BetweenRule extends Rule {
                     else
                         leftPossible = (possibilities.isPossible(i-1, centerRow, centerThing)
                                 && possibilities.isPossible(i-2, row1, thing1));
-                    if (i >= PUZZLE_SIZE - 2)
+                    if (i >= puzzleSize - 2)
                         rightPossible = false;
                     else
                         rightPossible = (possibilities.isPossible(i+1, centerRow, centerThing)
@@ -87,7 +87,7 @@ public class BetweenRule extends Rule {
                     else
                         leftPossible = (possibilities.isPossible(i-1, centerRow, centerThing)
                                 && possibilities.isPossible(i-2, row2, thing2));
-                    if (i >= PUZZLE_SIZE - 2)
+                    if (i >= puzzleSize - 2)
                         rightPossible = false;
                     else
                         rightPossible = (possibilities.isPossible(i+1, centerRow, centerThing)

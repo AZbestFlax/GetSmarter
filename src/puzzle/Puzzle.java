@@ -6,7 +6,7 @@ import rules.Rule;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import static puzzle.Parameters.PUZZLE_SIZE;
+import static puzzle.Parameters.puzzleSize;
 
 public class Puzzle implements Serializable {
     private ArrayList<Rule> rules;
@@ -16,7 +16,7 @@ public class Puzzle implements Serializable {
 
     public Puzzle() {
         rules = new ArrayList<Rule>();
-        puzzle = new int[PUZZLE_SIZE][PUZZLE_SIZE];
+        puzzle = new int[puzzleSize][puzzleSize];
         possibilities = new Possibilities();
         PuzzleGenerator.genPuzzle(puzzle, rules);
         visibleRules = new boolean[rules.size()];

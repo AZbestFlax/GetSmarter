@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import static puzzle.Parameters.PUZZLE_SIZE;
+import static puzzle.Parameters.puzzleSize;
 
 public class BufferedGlyph {
 
@@ -14,16 +14,16 @@ public class BufferedGlyph {
     private BufferedImage[][] images;
 
     public BufferedGlyph() {
-        images = new BufferedImage[PUZZLE_SIZE][PUZZLE_SIZE];
+        images = new BufferedImage[puzzleSize][puzzleSize];
         BufferedImage bi = null;
         try {
             bi = ImageIO.read(new File("src/image/All.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for ( int i = 0; i < PUZZLE_SIZE; i++ ) {
-            for ( int j = 0; j < PUZZLE_SIZE; j++ ) {
-                    images[i][j] = bi.getSubimage(i*SZ, j*SZ, SZ, SZ);
+        for (int i = 0; i < puzzleSize; i++ ) {
+            for (int j = 0; j < puzzleSize; j++ ) {
+                    images[j][i] = bi.getSubimage(i*SZ, j*SZ, SZ, SZ);
             }
         }
     }

@@ -6,7 +6,7 @@ import puzzle.ShowOptions;
 
 import java.util.Random;
 
-import static puzzle.Parameters.PUZZLE_SIZE;
+import static puzzle.Parameters.puzzleSize;
 import static puzzle.ShowOptions.SHOW_NOTHING;
 
 public class OpenRule extends Rule {
@@ -15,8 +15,8 @@ public class OpenRule extends Rule {
     public OpenRule(int[][] puzzle) {
         super();
         Random rndGen = new Random();
-        col = rndGen.nextInt(PUZZLE_SIZE);
-        row = rndGen.nextInt(PUZZLE_SIZE);
+        col = rndGen.nextInt(puzzleSize);
+        row = rndGen.nextInt(puzzleSize);
         thing = puzzle[row][col];
     }
 

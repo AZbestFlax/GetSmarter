@@ -7,7 +7,6 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -28,7 +27,6 @@ import puzzle.VisualHints;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Date;
-import java.util.Timer;
 
 import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 import static puzzle.Parameters.*;
@@ -45,6 +43,7 @@ public class MainForm extends Application {
     BufferedImage backgroundField;
     Coordinator coordinator;
     final Stage dialog = new Stage();
+    final Stage difficulty = new Stage();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -56,6 +55,25 @@ public class MainForm extends Application {
         dialogVbox.getChildren().add(new Text("Wrong"));
         Scene dialogScene = new Scene(dialogVbox, 300, 200);
         dialog.setScene(dialogScene);
+
+        difficulty.initModality(Modality.APPLICATION_MODAL);
+        difficulty.initOwner(primaryStage);
+        VBox diff = new VBox(3);
+        diff.setAlignment(Pos.CENTER);
+
+        ToggleGroup tg = new ToggleGroup();
+        RadioButton[] btns = new RadioButton[7];
+        for (int i = 0; i < 7; i++) {
+            btns[i] = new RadioButton(""+(i+3));
+            btns[i].setToggleGroup(tg);
+            diff.getChildren().add(btns[i]);
+            btns[i].setOnAction( (ae) -> {
+                CurrentParameters.puzzleSize = Integer.valueOf(((RadioButton)ae.getSource()).getText());
+            } );
+        }
+        btns[3].fire();
+        Scene diffScene = new Scene(diff, 300, 200);
+        difficulty.setScene(diffScene);
 
         puzzle = new Puzzle();
         reset();
@@ -139,11 +157,11 @@ public class MainForm extends Application {
         bottomSide.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         leftSide.setOpaqueInsets(new Insets(10.0));
-        leftSide.setPrefWidth( (Math.ceil(Math.sqrt(PUZZLE_SIZE))*BTN_SIZE + 10.0)*PUZZLE_SIZE );
+        leftSide.setPrefWidth( (Math.ceil(Math.sqrt(puzzleSize))*BTN_SIZE + 10.0)* puzzleSize);
         leftSide.getChildren().addAll(field, bottomSide);
 
         //*
-        for (int i = 0; i < PUZZLE_SIZE; i++)
+        for (int i = 0; i < puzzleSize; i++)
             updateButton(i);
         //*/
         /*
@@ -170,12 +188,13 @@ public class MainForm extends Application {
         root.setPrefHeight(GRID_SIZE + verticalHints.getPrefHeight());
         primaryStage.setResizable(false);
 
-        Label info = new Label("Time: 00:00:00");
-        Timer timer = new Timer();
-        UpdateTime updateTime = new UpdateTime(info);
-        timer.schedule(updateTime,0,10000);
-        root.setBottom(info);
-
+        /*
+            Label info = new Label("Time: 00:00:00");
+            Timer timer = new Timer();
+            UpdateTime updateTime = new UpdateTime(info);
+            timer.schedule(updateTime,0,10000);
+            root.setBottom(info);
+        */
         primaryStage.setScene(new Scene(root, GRID_SIZE + horizontalHints.getPrefWidth(), GRID_SIZE + verticalHints.getPrefHeight() + mainMenu.getHeight() + 35));
         primaryStage.show();
     }
@@ -190,15 +209,15 @@ public class MainForm extends Application {
         System.out.print("After Glyph creation: ");
         System.out.println(new Date());
 
-        vhh = new VisualHints(puzzle.getRules());
-        coordinator = new Coordinator(PUZZLE_SIZE);
+        vhh = new VisualHints(puzzle.getRules(), glyph);
+        coordinator = new Coordinator(puzzleSize);
 
 
 
-        openButtons = new boolean[PUZZLE_SIZE][PUZZLE_SIZE];
-        guessedButtons = new boolean[PUZZLE_SIZE][PUZZLE_SIZE];
-        for ( int i = 0; i < PUZZLE_SIZE; i++) {
-            for ( int j = 0; j < PUZZLE_SIZE; j++) {
+        openButtons = new boolean[puzzleSize][puzzleSize];
+        guessedButtons = new boolean[puzzleSize][puzzleSize];
+        for (int i = 0; i < puzzleSize; i++) {
+            for (int j = 0; j < puzzleSize; j++) {
                 openButtons[i][j] = false;
                 guessedButtons[i][j] = false;
             }
@@ -211,9 +230,9 @@ public class MainForm extends Application {
         field = new ImageView();
         backgroundField = new BufferedImage((int)GRID_SIZE + 5, (int)GRID_SIZE, TYPE_INT_ARGB);
         Graphics graph = backgroundField.getGraphics();
-        for (int i = 0; i < PUZZLE_SIZE; i++) {
-            for ( int j = 0; j < PUZZLE_SIZE; j++ ) {
-                for ( int k = 0; k < PUZZLE_SIZE; k++ ) {
+        for (int i = 0; i < puzzleSize; i++) {
+            for (int j = 0; j < puzzleSize; j++ ) {
+                for (int k = 0; k < puzzleSize; k++ ) {
                     Position pos = coordinator.getPosition(i, j, k);
                     graph.drawImage(
                             glyph.getGlyph(i, k).getScaledInstance(buttonSize, buttonSize, Image.SCALE_DEFAULT)
@@ -229,12 +248,12 @@ public class MainForm extends Application {
 
 
     private void updateButton(int i) {
-        for ( int j = 0; j < PUZZLE_SIZE; j++ ) {
+        for (int j = 0; j < puzzleSize; j++ ) {
             if ( puzzle.possibilities.isDefined(j, i) ) {
                 setButtonActive(i, j, puzzle.possibilities.getDefined(j, i)-1);
                 guessedButtons[i][puzzle.possibilities.getDefined(j, i)-1] = true;
             } else {
-                for ( int k = 0; k < PUZZLE_SIZE; k++ ) {
+                for (int k = 0; k < puzzleSize; k++ ) {
                     if ( !puzzle.possibilities.isAccessible(j, i, k) ) {
                         setButtonInactive(i, j, k);
                     }

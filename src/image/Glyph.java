@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static puzzle.Parameters.BTN_SIZE;
-import static puzzle.Parameters.PUZZLE_SIZE;
+import static puzzle.Parameters.puzzleSize;
 
 @Deprecated
 public class Glyph {
@@ -20,16 +20,16 @@ public class Glyph {
     private ImageView[][] images;
 
     public Glyph() {
-        images = new ImageView[PUZZLE_SIZE][PUZZLE_SIZE];
+        images = new ImageView[puzzleSize][puzzleSize];
         BufferedImage bi = null;
         try {
             bi = ImageIO.read(new File("src/image/All.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for ( int i = 0; i < PUZZLE_SIZE; i++ ) {
-            for ( int j = 0; j < PUZZLE_SIZE; j++ ) {
-                for ( int k = 0; k < PUZZLE_SIZE; k++ ) {
+        for (int i = 0; i < puzzleSize; i++ ) {
+            for (int j = 0; j < puzzleSize; j++ ) {
+                for (int k = 0; k < puzzleSize; k++ ) {
                     images[i][j] = new ImageView();
                     images[i][j].setImage(
                             SwingFXUtils.toFXImage(bi.getSubimage(i*SZ, j*SZ, SZ, SZ), null)

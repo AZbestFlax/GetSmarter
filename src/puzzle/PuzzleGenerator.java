@@ -9,8 +9,8 @@ import java.util.Random;
 public class PuzzleGenerator implements Parameters{
 
     public static void genPuzzle(int[][] puzzle, List<Rule> rules) {
-        for (int i = 0; i < PUZZLE_SIZE; i++) {
-            for (int j = 0; j < PUZZLE_SIZE; j++)
+        for (int i = 0; i < puzzleSize; i++) {
+            for (int j = 0; j < puzzleSize; j++)
                 puzzle[i][j] = j + 1;
             shuffle(puzzle[i]);
         }
@@ -73,8 +73,8 @@ public class PuzzleGenerator implements Parameters{
     {
         Random rand = new Random();
         int a, c;
-        for (int i = 0; i < PUZZLE_SIZE; i++) {
-            a = rand.nextInt(PUZZLE_SIZE);
+        for (int i = 0; i < puzzleSize; i++) {
+            a = rand.nextInt(puzzleSize);
             c = arr[a];
             arr[a] = arr[i];
             arr[i] = c;
@@ -121,23 +121,23 @@ public class PuzzleGenerator implements Parameters{
     /*
             void savePuzzle(SolvedPuzzle &puzzle, std::ostream &stream)
             {
-                for (int row = 0; row < PUZZLE_SIZE; row++)
-                for (int col = 0; col < PUZZLE_SIZE; col++)
+                for (int row = 0; row < puzzleSize; row++)
+                for (int col = 0; col < puzzleSize; col++)
                     writeInt(stream, puzzle[row][col]);
             }
 
             void loadPuzzle(SolvedPuzzle &puzzle, std::istream &stream)
             {
-                for (int row = 0; row < PUZZLE_SIZE; row++)
-                    for (int col = 0; col < PUZZLE_SIZE; col++)
+                for (int row = 0; row < puzzleSize; row++)
+                    for (int col = 0; col < puzzleSize; col++)
                         puzzle[row][col] = readInt(stream);
             }
     */
     public static void printPuzzle(int[][] puzzle)
     {
-        for (int i = 0; i < PUZZLE_SIZE; i++) {
+        for (int i = 0; i < puzzleSize; i++) {
             char prefix = (char)((int)'A' + i);
-            for (int j = 0; j < PUZZLE_SIZE; j++) {
+            for (int j = 0; j < puzzleSize; j++) {
                 if (j != 0)
                     System.out.print("  ");
                 System.out.print("" + prefix + puzzle[i][j]);
