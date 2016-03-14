@@ -6,13 +6,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -25,6 +26,7 @@ import puzzle.VisualHints;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Date;
 
 import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 import static puzzle.Parameters.*;
@@ -147,9 +149,11 @@ public class MainForm extends Application {
 */
 
         MenuBar mainMenu = new MenuBar();
-        mainMenu.setPrefHeight(30);
-        Menu mGame = new Menu("Game");
+        mainMenu.setPrefHeight(25);
+        Menu mGame = new Menu("_Game");
         MenuItem miOpen = new MenuItem("Open");
+        miOpen.setAccelerator(KeyCombination.keyCombination("shortcut+O"));
+        miOpen.setMnemonicParsing(true);
         MenuItem miSave = new MenuItem("Save");
         MenuItem miReset = new MenuItem("Reset");
         MenuItem miExit = new MenuItem("Exit");
@@ -163,14 +167,24 @@ public class MainForm extends Application {
         root.setPrefHeight(GRID_SIZE + verticalHints.getPrefHeight());
         primaryStage.setResizable(false);
 
-        primaryStage.setScene(new Scene(root, GRID_SIZE + horizontalHints.getPrefWidth(), GRID_SIZE + verticalHints.getPrefHeight()));
+        primaryStage.setScene(new Scene(root, GRID_SIZE + horizontalHints.getPrefWidth(), GRID_SIZE + verticalHints.getPrefHeight() + mainMenu.getHeight() + 20));
         primaryStage.show();
     }
 
     public void reset() {
+
+        System.out.print("Start reset: ");
+        System.out.println(new Date());
+
         glyph = new BufferedGlyph();
+
+        System.out.print("After Glyph creation: ");
+        System.out.println(new Date());
+
         vhh = new VisualHints(puzzle.getRules());
         coordinator = new Coordinator(PUZZLE_SIZE);
+
+
 
         openButtons = new boolean[PUZZLE_SIZE][PUZZLE_SIZE];
         guessedButtons = new boolean[PUZZLE_SIZE][PUZZLE_SIZE];
@@ -180,6 +194,9 @@ public class MainForm extends Application {
                 guessedButtons[i][j] = false;
             }
         }
+
+        System.out.print("After Buttons creation: ");
+        System.out.println(new Date());
 
         int buttonSize = (int) Coordinator.getButtonSize();
         field = new ImageView();
@@ -195,7 +212,12 @@ public class MainForm extends Application {
                 }
             }
         }
+
+        System.out.print("After Buttons loading: ");
+        System.out.println(new Date());
+
     }
+
 
     private void updateButton(int i) {
         for ( int j = 0; j < PUZZLE_SIZE; j++ ) {
