@@ -7,6 +7,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -27,12 +28,14 @@ import puzzle.VisualHints;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Date;
+import java.util.Timer;
 
 import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 import static puzzle.Parameters.*;
 
 public class MainForm extends Application {
 
+    private double percent = 0.0;
     Puzzle puzzle;
     private boolean[][] openButtons;
     private boolean[][] guessedButtons;
@@ -167,7 +170,13 @@ public class MainForm extends Application {
         root.setPrefHeight(GRID_SIZE + verticalHints.getPrefHeight());
         primaryStage.setResizable(false);
 
-        primaryStage.setScene(new Scene(root, GRID_SIZE + horizontalHints.getPrefWidth(), GRID_SIZE + verticalHints.getPrefHeight() + mainMenu.getHeight() + 20));
+        Label info = new Label("Time: 00:00:00");
+        Timer timer = new Timer();
+        UpdateTime updateTime = new UpdateTime(info);
+        timer.schedule(updateTime,0,10000);
+        root.setBottom(info);
+
+        primaryStage.setScene(new Scene(root, GRID_SIZE + horizontalHints.getPrefWidth(), GRID_SIZE + verticalHints.getPrefHeight() + mainMenu.getHeight() + 35));
         primaryStage.show();
     }
 
