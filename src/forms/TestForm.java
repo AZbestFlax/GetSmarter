@@ -8,7 +8,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import static puzzle.Parameters.PUZZLE_SIZE;
+import static puzzle.Parameters.puzzleSize;
 
 public class TestForm extends Application {
     @Override
@@ -19,7 +19,7 @@ public class TestForm extends Application {
         primaryStage.setScene(scene);
 
         GridPane gridGame = new GridPane();
-        for (int i = 0; i < PUZZLE_SIZE; i++) {
+        for (int i = 0; i < puzzleSize; i++) {
             gridGame.addColumn(i);
             gridGame.addRow(i);
         }

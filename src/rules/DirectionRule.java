@@ -6,7 +6,7 @@ import puzzle.ShowOptions;
 
 import java.util.Random;
 
-import static puzzle.Parameters.PUZZLE_SIZE;
+import static puzzle.Parameters.puzzleSize;
 import static puzzle.ShowOptions.SHOW_HORIZ;
 
 public class DirectionRule extends Rule {
@@ -15,10 +15,10 @@ public class DirectionRule extends Rule {
     public DirectionRule(int[][] puzzle) {
         super();
         Random rndGen = new Random();
-        row1 = rndGen.nextInt(PUZZLE_SIZE);
-        row2 = rndGen.nextInt(PUZZLE_SIZE);
-        int col1 = rndGen.nextInt(PUZZLE_SIZE - 1);
-        int col2 = rndGen.nextInt(PUZZLE_SIZE - col1 - 1) + col1 + 1;
+        row1 = rndGen.nextInt(puzzleSize);
+        row2 = rndGen.nextInt(puzzleSize);
+        int col1 = rndGen.nextInt(puzzleSize - 1);
+        int col2 = rndGen.nextInt(puzzleSize - col1 - 1) + col1 + 1;
         thing1 = puzzle[row1][col1];
         thing2 = puzzle[row2][col2];
     }
@@ -30,7 +30,7 @@ public class DirectionRule extends Rule {
 
     public boolean apply(Possibilities possibilities) {
         boolean changed = false;
-        for (int i = 0; i < PUZZLE_SIZE; i++) {
+        for (int i = 0; i < puzzleSize; i++) {
             if (possibilities.isPossible(i, row2, thing2)) {
                 possibilities.exclude(i, row2, thing2);
                 changed = true;
@@ -38,7 +38,7 @@ public class DirectionRule extends Rule {
             if (possibilities.isPossible(i, row1, thing1))
                 break;
         }
-        for (int i = PUZZLE_SIZE-1; i >= 0; i--) {
+        for (int i = puzzleSize -1; i >= 0; i--) {
             if (possibilities.isPossible(i, row1, thing1)) {
                 possibilities.exclude(i, row1, thing1);
                 changed = true;

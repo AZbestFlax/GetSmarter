@@ -3,12 +3,12 @@ package puzzle;
 import rules.OpenRule;
 import rules.Rule;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
-import static puzzle.Parameters.PUZZLE_SIZE;
+import static puzzle.Parameters.puzzleSize;
 
-public class Puzzle {
+public class Puzzle implements Serializable {
     private ArrayList<Rule> rules;
     private int[][] puzzle;
     private boolean[] visibleRules;
@@ -16,7 +16,7 @@ public class Puzzle {
 
     public Puzzle() {
         rules = new ArrayList<Rule>();
-        puzzle = new int[PUZZLE_SIZE][PUZZLE_SIZE];
+        puzzle = new int[puzzleSize][puzzleSize];
         possibilities = new Possibilities();
         PuzzleGenerator.genPuzzle(puzzle, rules);
         visibleRules = new boolean[rules.size()];
@@ -36,6 +36,10 @@ public class Puzzle {
 
     public static void main(String[] args) {
         new Puzzle();
+    }
+
+    public int getRightValue(int row, int col) {
+        return puzzle[row][col];
     }
 
 }

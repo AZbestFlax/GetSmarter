@@ -6,7 +6,7 @@ import puzzle.ShowOptions;
 
 import java.util.Random;
 
-import static puzzle.Parameters.PUZZLE_SIZE;
+import static puzzle.Parameters.puzzleSize;
 import static puzzle.ShowOptions.SHOW_VERT;
 
 public class UnderRule extends Rule {
@@ -16,11 +16,11 @@ public class UnderRule extends Rule {
     public UnderRule(int[][] puzzle) {
         super();
         Random rndGen = new Random();
-        int col = rndGen.nextInt(PUZZLE_SIZE);
-        row1 = rndGen.nextInt(PUZZLE_SIZE);
+        int col = rndGen.nextInt(puzzleSize);
+        row1 = rndGen.nextInt(puzzleSize);
         thing1 = puzzle[row1][col];
         do {
-            row2 = rndGen.nextInt(PUZZLE_SIZE);
+            row2 = rndGen.nextInt(puzzleSize);
         } while (row2 == row1) ;
         thing2 = puzzle[row2][col];
     }
@@ -32,7 +32,7 @@ public class UnderRule extends Rule {
 
     public boolean apply(Possibilities possibilities) {
         boolean changed = false;
-        for (int i = 0; i < PUZZLE_SIZE; i++) {
+        for (int i = 0; i < puzzleSize; i++) {
             if ((! possibilities.isPossible(i, row1, thing1)) &&
                     possibilities.isPossible(i, row2, thing2))
             {
